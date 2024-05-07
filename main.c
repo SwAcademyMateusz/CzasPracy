@@ -41,20 +41,25 @@ int main()
 		strftime (timeText, sizeof(timeText), "%H:%M:%S",timeinfo);
 		printf("Czas pracy: %s\n", timeText);
 
-		if(0 != kbhit())
+		while(timeNow == time(NULL))
 		{
-			cmd = getch();
-			if('s' == cmd)
+			if(0 != kbhit())
 			{
-				timeinfo = localtime(&timeNow);
-				strftime (timeText, sizeof(timeText), "%H:%M:%S",timeinfo);
-				printf("Godzina zakonczenia pracy: %s\n", timeText);
+				cmd = getch();
+				if('s' == cmd)
+				{
+					timeinfo = localtime(&timeNow);
+					strftime (timeText, sizeof(timeText), "%H:%M:%S",timeinfo);
+					printf("Godzina zakonczenia pracy: %s\n", timeText);
 
-				break;
+					break;
+				}
 			}
 		}
-
-		sleep(1);
+		if('s' == cmd)
+		{
+			break;
+		}
 	}
 
 	cmd = getch();
