@@ -211,7 +211,7 @@ void UserInterface_Refresh(tWorkTimer *workTimer)
 		  {
 			  lastTime = timeNow;
 
-			  printWorkDurationTime(WorkTimer_GetWorkTime(&workTimer), WorkTimer_GetPauseTime(&workTimer));
+			  printWorkDurationTime(WorkTimer_GetWorkTime(workTimer), WorkTimer_GetPauseTime(workTimer));
 
 		  }
 	  }
