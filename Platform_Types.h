@@ -27,5 +27,6 @@ typedef unsigned long         uint32_least;  /* At least 32 bit                *
 typedef float                 float32;
 typedef double                float64;
 
-
+#define FALSE 0
+#define TRUE 1
 #endif /* PLATFORM_TYPES_H_ */

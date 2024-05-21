@@ -17,7 +17,7 @@ typedef struct
 	time_t endWork;
 	time_t workDuration;
 
-} tWorkTime;
+} tDayWorkTime;
 
 
 

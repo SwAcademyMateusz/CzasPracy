@@ -10,6 +10,7 @@
 #include <windows.h>
 #include <conio.h>
 #include <stdio.h>
+#include "WorkTimer.h"
 
 void resetConsole()
 {
@@ -74,7 +75,7 @@ void printDate(time_t time)
 }
 
 
-void printWorkTime(tWorkTime workTime)
+void printWorkTime(tDayWorkTime workTime)
 {
 	printDate(workTime.startWork);
 	printf("\t");
@@ -110,7 +111,7 @@ void printWorkStartTime()
 
 }
 
-void printWorkDurationTime(time_t workTime)
+void printWorkDurationTime(time_t workTime, time_t pauseTime)
 {
 	HANDLE ConsoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 	COORD targetPosition = {0,3};
@@ -121,6 +122,10 @@ void printWorkDurationTime(time_t workTime)
     printTimeSpan(workTime);
 	setConsoleFontWhite();
 
+	targetPosition.Y = 4;
+	SetConsoleCursorPosition(ConsoleHandle, targetPosition);
+	printf("Czas przerwy: ");
+	printTimeSpan(pauseTime);
 }
 
 
@@ -128,7 +133,7 @@ void printWorkDurationTime(time_t workTime)
 void printStats()
 {
 
-	tWorkTime workTime[3] = {{1716152618, 1716152628, 60},
+	tDayWorkTime workTime[3] = {{1716152618, 1716152628, 60},
 			{1716152618+3600, 1716152628+7200, 600},
 			{1716152618+7800, 1716152628+9800, 300}};
 	HANDLE ConsoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -164,7 +169,6 @@ void UserInterface_Init()
 
     printHeader();
 
-	printWorkStartTime();
 
 
 
@@ -192,17 +196,36 @@ char UserInterface_GetKeyCmd()
 	return cmd;
 }
 
-void UserInterface_Refresh(time_t workTime)
+void UserInterface_Refresh(tWorkTimer *workTimer)
 {
 	  static time_t lastTime=0;
+	  static tWorkTimerState lastTimerState = WORKTIMER_STATE_INIT;
+	  tWorkTimerState currTimerState;
 	  time_t timeNow;
 
-	  timeNow = time(NULL);
-	  if(timeNow != lastTime)
+	  if(WorkTimer_IsInitialized(workTimer))
 	  {
 
-		  printWorkDurationTime(workTime);
-		  lastTime = timeNow;
+		  timeNow = time(NULL);
+		  if(timeNow != lastTime)
+		  {
+			  lastTime = timeNow;
+
+			  printWorkDurationTime(WorkTimer_GetWorkTime(&workTimer), WorkTimer_GetPauseTime(&workTimer));
+
+		  }
+	  }
+
+	  currTimerState = WorkTimer_GetWorkTimerState(workTimer);
+	  if(currTimerState != lastTimerState)
+	  {
+
+		  if(WORKTIMER_STATE_WORK == currTimerState)
+		  {
+			  printWorkStartTime();
+		  }
+
+		lastTimerState = currTimerState;
 	  }
 
 }

@@ -1,22 +1,16 @@
 #include <stdio.h>
-#include <time.h>
-#include <unistd.h>
-#include <conio.h>
+
 #include "Platform_Types.h"
 #include "UserInterface.h"
-
-
+#include "WorkTimer.h"
 
 
 int main()
 {
 
-
-	time_t timeNow, timeStart, diffTime;
-	struct tm * timeinfo;
 	char cmd=0;
-
-	timeStart = time(NULL);
+	tWorkTimer workTimer;
+	WorkTimer_Init(&workTimer);
 
 	UserInterface_Init();
 
@@ -24,14 +18,14 @@ int main()
 	cmd = 0;
 	while(cmd != 'q')
 	{
-
-		timeNow = time(NULL);
-		diffTime = timeNow - timeStart;
-
 		cmd =  UserInterface_GetKeyCmd();
 
+		if('s' == cmd)
+		{
+			WorkTimer_StartStop(&workTimer);
+		}
 
-		UserInterface_Refresh(diffTime);
+		UserInterface_Refresh(&workTimer);
 	}
 
 
