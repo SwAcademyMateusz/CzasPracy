@@ -2,69 +2,40 @@
 #include <time.h>
 #include <unistd.h>
 #include <conio.h>
+#include "Platform_Types.h"
+#include "UserInterface.h"
+
+
+
 
 int main()
 {
+
+
 	time_t timeNow, timeStart, diffTime;
 	struct tm * timeinfo;
-
 	char cmd=0;
-	char timeText[80];
-	char timeStartText[40];
-
-    system("cls");
-
-	printf("[s] Start pracy\n\n");
-
-	while(cmd!='s')
-	{
-		cmd = getch();
-	}
 
 	timeStart = time(NULL);
-	timeinfo = localtime (&timeStart);
-	strftime(timeStartText, sizeof(timeStartText),"%H:%M:%S",timeinfo);
+
+	UserInterface_Init();
 
 
 	cmd = 0;
-	while(1)
+	while(cmd != 'q')
 	{
-	    system("cls");
-		printf("[s] Zakonczenie pracy\n\n");
-
-
-		printf("Godzina rozpoczecia pracy: %s\n", timeStartText);
 
 		timeNow = time(NULL);
 		diffTime = timeNow - timeStart;
-		timeinfo = gmtime(&diffTime);
-		strftime (timeText, sizeof(timeText), "%H:%M:%S",timeinfo);
-		printf("Czas pracy: %s\n", timeText);
 
-		while(timeNow == time(NULL))
-		{
-			if(0 != kbhit())
-			{
-				cmd = getch();
-				if('s' == cmd)
-				{
-					timeinfo = localtime(&timeNow);
-					strftime (timeText, sizeof(timeText), "%H:%M:%S",timeinfo);
-					printf("Godzina zakonczenia pracy: %s\n", timeText);
+		cmd =  UserInterface_GetKeyCmd();
 
-					break;
-				}
-			}
-		}
-		if('s' == cmd)
-		{
-			break;
-		}
+
+		UserInterface_Refresh(diffTime);
 	}
 
-	cmd = getch();
 
-	fflush(stdout);
+	UserInterface_Finish();
 
 	return 0;
 }
