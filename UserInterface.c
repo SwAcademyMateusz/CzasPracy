@@ -11,8 +11,9 @@
 #include <conio.h>
 #include <stdio.h>
 #include "WorkTimer.h"
-
 #include "WorkHistory.h"
+
+#define HISTORY_DISPLAY_MAX_ROWS 28
 
 void resetConsole()
 {
@@ -200,46 +201,6 @@ void printMonthYear(tYearMonth date)
 
 }
 
-extern tWorkHistory WorkHistory;
-
-
-void printStats()
-{
-
-
-	HANDLE ConsoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-	COORD targetPosition = {0,8};
-	SetConsoleCursorPosition(ConsoleHandle, targetPosition);
-
-
-	setConsoleFontGreen();
-	printf("\t\t\t<<  ");
-	setConsoleFontWhite();
-	printMonthYear(WorkHistory.currentWorkMonth);
-	setConsoleFontGreen();
-	printf("   >>               \n");
-	setConsoleFontWhite();
-
-
-	printf("Data \t\tGodzina rozpoczecia \tGodzina zakonczenia \tCzas pracy\n");
-
-	uint32 i, numOfItems=0;
-	uint32 firstItemIndex=0;
-	numOfItems = WorkHistory_GetMonthItems(&WorkHistory, &firstItemIndex);
-
-	for(i=firstItemIndex; i<firstItemIndex+numOfItems; i++)
-	{
-		printWorkTime(WorkHistory_GetItem(&WorkHistory, i));
-	}
-
-	for(i=0; i<20-numOfItems; i++)
-	{
-		printf("                                                                                  \n");
-	}
-
-
-}
-
 
 void UserInterface_Init()
 {
@@ -253,11 +214,6 @@ void UserInterface_Init()
 
     printHeader();
 
-
-
-
-
-	printStats();
 	fflush(stdout);
 
 }
@@ -328,6 +284,61 @@ void UserInterface_Refresh(tWorkTimer *workTimer)
 
 }
 
+void UserInterface_RefreshHistory(tWorkHistory* workHistory)
+{
+	uint32 i, numOfItems=0;
+	uint32 firstItemIndex=0;
+	tDayWorkTime workDay;
+
+	HANDLE ConsoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+	COORD targetPosition = {0,8};
+	SetConsoleCursorPosition(ConsoleHandle, targetPosition);
+	for(i=0; i<HISTORY_DISPLAY_MAX_ROWS+3; i++)
+	{
+		printf("                                                                                  \n");
+	}
+	SetConsoleCursorPosition(ConsoleHandle, targetPosition);
+
+	setConsoleFontGreen();
+	printf("\t\t\t<<  ");
+	setConsoleFontWhite();
+	printMonthYear(workHistory->currentWorkMonth);
+	setConsoleFontGreen();
+	printf("   >>               \n");
+	setConsoleFontWhite();
 
 
+	printf("Data \t\tGodzina rozpoczecia \tGodzina zakonczenia \tCzas pracy\n");
+
+	numOfItems = WorkHistory_GetMonthItems(workHistory, &firstItemIndex);
+
+	time_t timeMonthSum = 0;
+
+	for(i=firstItemIndex; i<firstItemIndex+numOfItems; i++)
+	{
+		workDay = WorkHistory_GetItem(workHistory, i);
+		timeMonthSum += workDay.workDuration;
+	}
+
+	if(numOfItems>HISTORY_DISPLAY_MAX_ROWS)
+	{
+		firstItemIndex = firstItemIndex + (numOfItems-HISTORY_DISPLAY_MAX_ROWS);
+		numOfItems = HISTORY_DISPLAY_MAX_ROWS;
+	}
+
+	for(i=firstItemIndex; i<firstItemIndex+numOfItems; i++)
+	{
+		workDay = WorkHistory_GetItem(workHistory, i);
+		printWorkTime(workDay);
+	}
+	setConsoleFontRed();
+	printf("                                                    SUMA: \t");
+	printTimeSpan(timeMonthSum);
+	setConsoleFontWhite();
+	printf("\n");
+
+
+
+
+}
 

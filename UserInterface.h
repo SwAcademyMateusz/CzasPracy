@@ -8,12 +8,14 @@
 #ifndef USERINTERFACE_H_
 #define USERINTERFACE_H_
 
+#include "WorkHistory.h"
 
 void UserInterface_Init();
 void UserInterface_Finish();
 
 void UserInterface_Refresh();
 char UserInterface_GetKeyCmd();
+void UserInterface_RefreshHistory(tWorkHistory* workHistory);
 
 
 #endif /* USERINTERFACE_H_ */

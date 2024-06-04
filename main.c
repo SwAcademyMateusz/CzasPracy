@@ -5,7 +5,6 @@
 #include "WorkTimer.h"
 #include "WorkHistory.h"
 
-tWorkHistory WorkHistory;
 
 
 int main()
@@ -14,16 +13,16 @@ int main()
 	int cmd=0;
 	tWorkTimer workTimer;
 	tDayWorkTime workDay;
+	tWorkHistory workHistory;
 
-
-	WorkHistory_Init(&WorkHistory);
+	WorkHistory_Init(&workHistory);
 	WorkTimer_Init(&workTimer);
 
-
-	WorkHistory_ReadFromFile(&WorkHistory);
+	WorkHistory_ReadFromFile(&workHistory);
 
 
 	UserInterface_Init();
+	UserInterface_RefreshHistory(&workHistory);
 
 	cmd = 0;
 	while(cmd != 'q')
@@ -37,10 +36,12 @@ int main()
 
 		if('k' == cmd)
 		{
-			WorkTimer_End(&workTimer);
-			workDay = WorkTimer_GetWorkDayData(&workTimer);
-			WorkHistory_AddItem(&WorkHistory, workDay);
-			printStats();
+			if(0==WorkTimer_End(&workTimer))
+			{
+				workDay = WorkTimer_GetWorkDayData(&workTimer);
+				WorkHistory_AddItem(&workHistory, workDay);
+				UserInterface_RefreshHistory(&workHistory);
+			}
 		}
 
 		if(0!=cmd)
@@ -51,14 +52,14 @@ int main()
 
 		if(75 == cmd)
 		{
-			WorkHistory_PrevMonth(&WorkHistory);
-			printStats();
+			WorkHistory_PrevMonth(&workHistory);
+			UserInterface_RefreshHistory(&workHistory);
 
 		}
 		if(77 == cmd)
 		{
-			WorkHistory_NextMonth(&WorkHistory);
-			printStats();
+			WorkHistory_NextMonth(&workHistory);
+			UserInterface_RefreshHistory(&workHistory);
 
 		}
 
@@ -66,7 +67,7 @@ int main()
 	}
 
 
-	WorkHistory_SaveToFile(&WorkHistory);
+	WorkHistory_SaveToFile(&workHistory);
 	UserInterface_Finish();
 
 	return 0;

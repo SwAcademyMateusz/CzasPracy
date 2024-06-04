@@ -53,14 +53,23 @@ void WorkTimer_StartStop(tWorkTimer *timer)
 	}
 }
 
-void WorkTimer_End(tWorkTimer *timer)
+uint8 WorkTimer_End(tWorkTimer *timer)
 {
+	uint8 retVal;
 	if((WORKTIMER_STATE_WORK ==  timer->state) || (WORKTIMER_STATE_PAUSE ==  timer->state))
 	{
 		timer->workTimeSum = WorkTimer_GetWorkTime(timer);
 		timer->lastWorkStartTime = time(NULL);
 		timer->state = WORKTIMER_STATE_END;
+
+		retVal = 0;
 	}
+	else
+	{
+		retVal = 1;
+	}
+
+	return retVal;
 }
 
 

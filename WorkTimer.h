@@ -9,7 +9,6 @@
 #define WORKTIMER_H_
 
 #include <time.h>
-#include "Platform_Types.h"
 #include <stdio.h>
 #include <unistd.h>
 #include "ApplTypes.h"
@@ -34,7 +33,7 @@ typedef struct
 void WorkTimer_Init(tWorkTimer *timer);
 boolean WorkTimer_IsInitialized(tWorkTimer *timer);
 void WorkTimer_StartStop(tWorkTimer *timer);
-void WorkTimer_End(tWorkTimer *timer);
+uint8 WorkTimer_End(tWorkTimer *timer);
 tWorkTimerState WorkTimer_GetWorkTimerState(tWorkTimer *timer);
 time_t WorkTimer_GetWorkTime(tWorkTimer *timer);
 time_t WorkTimer_GetPauseTime(tWorkTimer *timer);

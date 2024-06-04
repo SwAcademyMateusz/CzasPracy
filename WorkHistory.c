@@ -35,7 +35,7 @@ void WorkHistory_Init(tWorkHistory *workHistory)
 
 void WorkHistory_PrevMonth(tWorkHistory *workHistory)
 {
-	uint32 itemPtr;
+	//uint32 itemPtr;
 	sint16 monthsOffset = (12 + workHistory->currentWorkMonth.month - 1) % 12;
 	if(monthsOffset == 0)
 	{
@@ -48,7 +48,7 @@ void WorkHistory_PrevMonth(tWorkHistory *workHistory)
 }
 void WorkHistory_NextMonth(tWorkHistory *workHistory)
 {
-	uint32 itemPtr;
+	//uint32 itemPtr;
 	sint16 monthsOffset = (workHistory->currentWorkMonth.month + 1) % 13;
 	if(monthsOffset == 0)
 	{
