@@ -9,7 +9,7 @@
 #define APPLTYPES_H_
 
 #include <time.h>
-
+#include "Platform_Types.h"
 
 typedef struct
 {
@@ -18,6 +18,15 @@ typedef struct
 	time_t workDuration;
 
 } tDayWorkTime;
+
+
+typedef struct
+{
+	uint8 month;
+	uint16 year;
+} tYearMonth;
+
+
 
 
 

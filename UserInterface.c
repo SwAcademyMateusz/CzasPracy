@@ -12,6 +12,8 @@
 #include <stdio.h>
 #include "WorkTimer.h"
 
+#include "WorkHistory.h"
+
 void resetConsole()
 {
     HANDLE ConsoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -129,13 +131,63 @@ void printWorkDurationTime(time_t workTime, time_t pauseTime)
 }
 
 
+void printMonthYear(tYearMonth date)
+{
+	switch(date.month)
+	{
+		case 1:
+			printf("styczen");
+		break;
+		case 2:
+			printf("luty");
+		break;
+		case 3:
+			printf("marzec");
+		break;
+		case 4:
+			printf("kwiecien");
+		break;
+		case 5:
+			printf("maj");
+		break;
+		case 6:
+			printf("czerwiec");
+		break;
+		case 7:
+			printf("lipiec");
+		break;
+		case 8:
+			printf("sierpien");
+		break;
+		case 9:
+			printf("wrzesien");
+		break;
+		case 10:
+			printf("pazdziernik");
+		break;
+		case 11:
+			printf("listopad");
+		break;
+		case 12:
+			printf("grudzien");
+		break;
+
+		default:
+		break;
+
+	}
+
+	printf(" %d", date.year);
+
+}
+
+extern tWorkHistory WorkHistory;
+
 
 void printStats()
 {
 
-	tDayWorkTime workTime[3] = {{1716152618, 1716152628, 60},
-			{1716152618+3600, 1716152628+7200, 600},
-			{1716152618+7800, 1716152628+9800, 300}};
+
 	HANDLE ConsoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 	COORD targetPosition = {0,8};
 	SetConsoleCursorPosition(ConsoleHandle, targetPosition);
@@ -144,16 +196,29 @@ void printStats()
 	setConsoleFontGreen();
 	printf("\t\t\t<<  ");
 	setConsoleFontWhite();
-	printf("Maj 2024");
+	printMonthYear(WorkHistory.currentWorkMonth);
 	setConsoleFontGreen();
-	printf("   >>\n");
+	printf("   >>               \n");
 	setConsoleFontWhite();
 
 
 	printf("Data \t\tGodzina rozpoczecia \tGodzina zakonczenia \tCzas pracy\n");
-	printWorkTime(workTime[0]);
-	printWorkTime(workTime[1]);
-	printWorkTime(workTime[2]);
+
+	uint32 i, numOfItems=0;
+	uint32 firstItemIndex=0;
+	numOfItems = WorkHistory_GetMonthItems(&WorkHistory, &firstItemIndex);
+
+	for(i=0; i<numOfItems; i++)
+	{
+		printWorkTime(WorkHistory_GetItem(&WorkHistory, firstItemIndex));
+	}
+
+	for(i=0; i<20-numOfItems; i++)
+	{
+		printf("                                                                                  \n");
+	}
+
+
 }
 
 
@@ -184,14 +249,23 @@ void UserInterface_Finish()
     system("cls");
 }
 
-char UserInterface_GetKeyCmd()
+int UserInterface_GetKeyCmd()
 {
-	char cmd = 0;
+	int cmd = 0;
 
 	if(0 != kbhit())
 	{
 		cmd = getch();
+		//printf("%d", cmd);
+
 	}
+
+
+	  if ( cmd == 224)
+	  {
+	        cmd = 256 + getch();
+	  }
+	  //cmd=getch(); /* get keyboard arrow */
 
 	return cmd;
 }
