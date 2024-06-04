@@ -138,8 +138,29 @@ tDayWorkTime WorkHistory_GetItem(tWorkHistory *workHistory, uint32 itemIndex)
 }
 
 #define FILE_NAME_HISTORY "CzasPracyHistoria.csv"
+#define LINE_PATTERN "%lu;%lu;%lu\r"
 uint8 WorkHistory_SaveToFile(tWorkHistory *workHistory)
 {
+	FILE* filePtr = fopen(FILE_NAME_HISTORY, "w");
+	if (filePtr == NULL) {
+		//printf("Brak pliku!");
+		return 1;
+	}
+	else
+	{
+		//printf("Otwarto plik");
+	}
+
+	uint32 i;
+	tDayWorkTime workDay;
+
+	for(i=0; i<workHistory->numOfDataItems; i++)
+	{
+		workDay = WorkHistory_GetItem(workHistory, i);
+		fprintf(filePtr, LINE_PATTERN, (workDay.startWork), (workDay.endWork), (workDay.workDuration));
+	}
+
+	fclose(filePtr);
 
 	return 0;
 }
@@ -157,12 +178,13 @@ uint8 WorkHistory_ReadFromFile(tWorkHistory *workHistory)
 
 	tDayWorkTime workDay;
 
-	while (fscanf(filePtr, "%lu;%lu;%lu\r", &(workDay.startWork), &(workDay.endWork), &(workDay.workDuration)) == 3)
+	while (fscanf(filePtr, LINE_PATTERN, &(workDay.startWork), &(workDay.endWork), &(workDay.workDuration)) == 3)
 	{
 		//printf("Dodano element!");
 		WorkHistory_AddItem(workHistory, workDay);
 	}
 
+	fclose(filePtr);
 
 	return 0;
 }

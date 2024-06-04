@@ -16,25 +16,11 @@ int main()
 	tDayWorkTime workDay;
 
 
-
-
 	WorkHistory_Init(&WorkHistory);
 	WorkTimer_Init(&workTimer);
 
 
-	tDayWorkTime workTime[4] = {
-			{0, 5*3600, 3*3600},
-			{1716152618+7800, 1716152628+9800, 300}};
-
-
-
-//	WorkHistory_AddItem(&WorkHistory, workTime[0]);
-//	WorkHistory_AddItem(&WorkHistory, workTime[1]);
-//	WorkHistory_AddItem(&WorkHistory, workTime[2]);
-//	WorkHistory_AddItem(&WorkHistory, workTime[3]);
-
 	WorkHistory_ReadFromFile(&WorkHistory);
-
 
 
 	UserInterface_Init();
@@ -80,6 +66,7 @@ int main()
 	}
 
 
+	WorkHistory_SaveToFile(&WorkHistory);
 	UserInterface_Finish();
 
 	return 0;

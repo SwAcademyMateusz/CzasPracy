@@ -227,9 +227,9 @@ void printStats()
 	uint32 firstItemIndex=0;
 	numOfItems = WorkHistory_GetMonthItems(&WorkHistory, &firstItemIndex);
 
-	for(i=0; i<numOfItems; i++)
+	for(i=firstItemIndex; i<firstItemIndex+numOfItems; i++)
 	{
-		printWorkTime(WorkHistory_GetItem(&WorkHistory, firstItemIndex));
+		printWorkTime(WorkHistory_GetItem(&WorkHistory, i));
 	}
 
 	for(i=0; i<20-numOfItems; i++)
