@@ -12,13 +12,14 @@
 #include "Platform_Types.h"
 #include <stdio.h>
 #include <unistd.h>
-
+#include "ApplTypes.h"
 
 typedef enum
 {
 	WORKTIMER_STATE_INIT=0,
 	WORKTIMER_STATE_WORK,
-	WORKTIMER_STATE_PAUSE
+	WORKTIMER_STATE_PAUSE,
+	WORKTIMER_STATE_END
 }tWorkTimerState;
 
 typedef struct
@@ -33,9 +34,11 @@ typedef struct
 void WorkTimer_Init(tWorkTimer *timer);
 boolean WorkTimer_IsInitialized(tWorkTimer *timer);
 void WorkTimer_StartStop(tWorkTimer *timer);
+void WorkTimer_End(tWorkTimer *timer);
 tWorkTimerState WorkTimer_GetWorkTimerState(tWorkTimer *timer);
 time_t WorkTimer_GetWorkTime(tWorkTimer *timer);
 time_t WorkTimer_GetPauseTime(tWorkTimer *timer);
 time_t WorkTimer_GetTotalTime(tWorkTimer *timer);
+tDayWorkTime WorkTimer_GetWorkDayData(tWorkTimer *timer);
 
 #endif /* WORKTIMER_H_ */

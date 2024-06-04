@@ -13,8 +13,12 @@ int main()
 
 	int cmd=0;
 	tWorkTimer workTimer;
-	WorkHistory_Init(&WorkHistory);
+	tDayWorkTime workDay;
 
+
+
+
+	WorkHistory_Init(&WorkHistory);
 	WorkTimer_Init(&workTimer);
 
 
@@ -44,6 +48,14 @@ int main()
 		if('s' == cmd)
 		{
 			WorkTimer_StartStop(&workTimer);
+		}
+
+		if('k' == cmd)
+		{
+			WorkTimer_End(&workTimer);
+			workDay = WorkTimer_GetWorkDayData(&workTimer);
+			WorkHistory_AddItem(&WorkHistory, workDay);
+			printStats();
 		}
 
 		if(0!=cmd)

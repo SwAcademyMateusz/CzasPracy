@@ -31,10 +31,11 @@ tWorkTimerState WorkTimer_GetWorkTimerState(tWorkTimer *timer)
 
 void WorkTimer_StartStop(tWorkTimer *timer)
 {
-	if(WORKTIMER_STATE_INIT == timer->state)
+	if(WORKTIMER_STATE_INIT == timer->state || WORKTIMER_STATE_END == timer->state)
 	{
 		timer->totalWorkStartTime = time(NULL);
 		timer->lastWorkStartTime = timer->totalWorkStartTime;
+		timer->workTimeSum = 0;
 		timer->state = WORKTIMER_STATE_WORK;
 	}
 	else if(WORKTIMER_STATE_WORK ==  timer->state)
@@ -51,6 +52,18 @@ void WorkTimer_StartStop(tWorkTimer *timer)
 
 	}
 }
+
+void WorkTimer_End(tWorkTimer *timer)
+{
+	if((WORKTIMER_STATE_WORK ==  timer->state) || (WORKTIMER_STATE_PAUSE ==  timer->state))
+	{
+		timer->workTimeSum = WorkTimer_GetWorkTime(timer);
+		timer->lastWorkStartTime = time(NULL);
+		timer->state = WORKTIMER_STATE_END;
+	}
+}
+
+
 
 time_t WorkTimer_GetTotalTime(tWorkTimer *timer)
 {
@@ -96,4 +109,15 @@ time_t WorkTimer_GetPauseTime(tWorkTimer *timer)
 	pauseTime = WorkTimer_GetTotalTime(timer) - WorkTimer_GetWorkTime(timer);
 
 	return pauseTime;
+}
+
+tDayWorkTime WorkTimer_GetWorkDayData(tWorkTimer *timer)
+{
+	tDayWorkTime workDay;
+
+	workDay.startWork = timer->totalWorkStartTime;
+	workDay.endWork = timer->lastWorkStartTime;
+	workDay.workDuration = timer->workTimeSum;
+
+	return workDay;
 }

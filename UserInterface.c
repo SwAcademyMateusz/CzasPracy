@@ -98,7 +98,7 @@ void printHeader()
 	SetConsoleCursorPosition(ConsoleHandle, targetPosition);
 
     setConsoleFontGreen();
-	printf("[s] Start/stop pracy \t [q] Zamknij \n");
+	printf("[s] Start/pauza pracy \t  [k] Koniec pracy \t [q] Zamknij \n");
 	setConsoleFontWhite();
 }
 
@@ -111,6 +111,25 @@ void printWorkStartTime()
 	printf("Godzina rozpoczecia pracy: ");
 	printTime(time(NULL));
 
+}
+
+void printWorkEndTime()
+{
+	HANDLE ConsoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+	COORD targetPosition = {0,5};
+	SetConsoleCursorPosition(ConsoleHandle, targetPosition);
+
+	printf("Godzina zakonczenia pracy: ");
+	printTime(time(NULL));
+
+}
+void clearWorkEndTime()
+{
+	HANDLE ConsoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+	COORD targetPosition = {0,5};
+	SetConsoleCursorPosition(ConsoleHandle, targetPosition);
+
+	printf("                                                    ");
 }
 
 void printWorkDurationTime(time_t workTime, time_t pauseTime)
@@ -297,6 +316,11 @@ void UserInterface_Refresh(tWorkTimer *workTimer)
 		  if(WORKTIMER_STATE_WORK == currTimerState)
 		  {
 			  printWorkStartTime();
+			  clearWorkEndTime();
+		  }
+		  else if(WORKTIMER_STATE_END == currTimerState)
+		  {
+			  printWorkEndTime();
 		  }
 
 		lastTimerState = currTimerState;
