@@ -8,6 +8,7 @@
 #include "time.h"
 #include "ApplTypes.h"
 #include "WorkHistory.h"
+#include <stdio.h>
 
 
 
@@ -43,10 +44,7 @@ void WorkHistory_PrevMonth(tWorkHistory *workHistory)
 	}
 	workHistory->currentWorkMonth.month = monthsOffset;
 
-	if(0==WorkHistory_GetMonthItems(workHistory, &itemPtr))
-	{
-		WorkHistory_PrevMonth(workHistory);
-	}
+
 }
 void WorkHistory_NextMonth(tWorkHistory *workHistory)
 {
@@ -59,10 +57,7 @@ void WorkHistory_NextMonth(tWorkHistory *workHistory)
 	}
 	workHistory->currentWorkMonth.month = monthsOffset;
 
-	if(0==WorkHistory_GetMonthItems(workHistory, &itemPtr))
-	{
-		WorkHistory_NextMonth(workHistory);
-	}
+
 }
 
 uint8 WorkHistory_AddItem(tWorkHistory *workHistory, tDayWorkTime item)
@@ -142,3 +137,32 @@ tDayWorkTime WorkHistory_GetItem(tWorkHistory *workHistory, uint32 itemIndex)
 	return retVal;
 }
 
+#define FILE_NAME_HISTORY "CzasPracyHistoria.csv"
+uint8 WorkHistory_SaveToFile(tWorkHistory *workHistory)
+{
+
+	return 0;
+}
+uint8 WorkHistory_ReadFromFile(tWorkHistory *workHistory)
+{
+	FILE* filePtr = fopen(FILE_NAME_HISTORY, "r");
+	if (filePtr == NULL) {
+		//printf("Brak pliku!");
+		return 1;
+	}
+	else
+	{
+		//printf("Otwarto plik");
+	}
+
+	tDayWorkTime workDay;
+
+	while (fscanf(filePtr, "%lu;%lu;%lu\r", &(workDay.startWork), &(workDay.endWork), &(workDay.workDuration)) == 3)
+	{
+		//printf("Dodano element!");
+		WorkHistory_AddItem(workHistory, workDay);
+	}
+
+
+	return 0;
+}

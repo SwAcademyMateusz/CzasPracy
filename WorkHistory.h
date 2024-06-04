@@ -31,4 +31,8 @@ uint32 WorkHistory_GetNumOfItems(tWorkHistory *workHistory);
 uint32 WorkHistory_GetMonthItems(tWorkHistory *workHistory, uint32* firstItemIndex);
 tDayWorkTime WorkHistory_GetItem(tWorkHistory *workHistory, uint32 itemIndex);
 
+uint8 WorkHistory_SaveToFile(tWorkHistory *workHistory);
+uint8 WorkHistory_ReadFromFile(tWorkHistory *workHistory);
+
+
 #endif /* WORKHISTORY_H_ */
